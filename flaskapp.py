@@ -720,15 +720,15 @@ def generate_pages():
         # 針對重複標題者, 附加目前重複標題出現數 +1, 未重複採原標題
         newhead.append(v + "-" + str(count + 1) if totalcount > 1 else v)
     # 刪除 content 目錄中所有 html 檔案
-    filelist = [ f for f in os.listdir(_curdir + "/content/") if f.endswith(".html") ]
+    filelist = [ f for f in os.listdir(_curdir + "\\content\\") if f.endswith(".html") ]
     for f in filelist:
-        os.remove(os.path.join(_curdir + "/content/", f))
+        os.remove(os.path.join(_curdir + "\\content\\", f))
     # 這裡需要建立專門寫出 html 的 write_page
     # index.html
-    with open(_curdir + "/content/index.html", "w", encoding="utf-8") as f:
+    with open(_curdir + "\\content\\index.html", "w", encoding="utf-8") as f:
         f.write(get_page2(None, newhead, 0))
     # sitemap
-    with open(_curdir + "/content/sitemap.html", "w", encoding="utf-8") as f:
+    with open(_curdir + "\\content\\sitemap.html", "w", encoding="utf-8") as f:
         # sitemap2 需要 newhead
         f.write(sitemap2(newhead))
     # 以下轉檔, 改用 newhead 數列
@@ -750,11 +750,11 @@ def generate_pages():
         html_doc = get_page2(newhead[i], newhead, 0, get_page_content)
         soup = bs4.BeautifulSoup(" ".join(get_page_content), "lxml")
         search_content.append({"title": newhead[i], "text": " ".join(filter(visible, soup.findAll(text=True))), "tags": "", "url": newhead[i] + ".html"})
-        with open(_curdir + "/content/" + newhead[i] + ".html", "w", encoding="utf-8") as f:
+        with open(_curdir + "\\content\\" + newhead[i] + ".html", "w", encoding="utf-8") as f:
             # 增加以 newhead 作為輸入
             f.write(html_doc)
     # GENERATE js file
-    with open(_curdir + "/content/tipuesearch_content.js", "w", encoding="utf-8") as f:
+    with open(_curdir + "\\content\\tipuesearch_content.js", "w", encoding="utf-8") as f:
         f.write("var tipuesearch = {\"pages\": " + str(search_content) + "};")
     # generate each page html under content directory
     return "已經將網站轉為靜態網頁. <a href='/'>Home</a>"
@@ -840,8 +840,8 @@ def get_page(heading, edit):
 def get_page2(heading, head, edit, get_page_content = None):
     not_used_head, level, page = parse_content()
     # 直接在此將 /images/ 換為 ./../images/, /downloads/ 換為 ./../downloads/, 以 content 為基準的相對目錄設定
-    page = [w.replace('src="/images/', 'src="./../images/') for w in page]
-    page = [w.replace('href="/downloads/', 'href="./../downloads/') for w in page]
+    page = [w.replace('/images/', './../images/') for w in page]
+    page = [w.replace('/downloads/', './../downloads/') for w in page]
     # 假如有 src="/static/ace/則換為 src="./../static/ace/
     page = [w.replace('src="/static/', 'src="./../static/') for w in page]
     directory = render_menu2(head, level, page)
@@ -1864,9 +1864,6 @@ def saveConfig():
 def savePage():
     """save all pages function"""
     page_content = request.form['page_content']
-    # when element_format : "html", need to remove the annoying comment to prevent brython exec
-    page_content = page_content.replace('// <![CDATA[', '')
-    page_content = page_content.replace('// ]]>', '')
     # check if administrator
     if not isAdmin():
         return redirect("/login")
@@ -1875,9 +1872,7 @@ def savePage():
     # 在插入新頁面資料前, 先複製 content.htm 一分到 content_backup.htm
     shutil.copy2(config_dir + "content.htm", config_dir + "content_backup.htm")
     # in Windows client operator, to avoid textarea add extra \n
-    # fix list object has no attribute "replace"
     page_content = page_content.replace("\n","")
-    #page_content =  [w.replace('\n', '') for w in page_content]
     with open(config_dir + "content.htm", "w", encoding="utf-8") as f:
         f.write(page_content)
     return redirect("/edit_page")
@@ -2192,9 +2187,6 @@ def sizeof_fmt(num):
 def ssavePage():
     """seperate save page function"""
     page_content = request.form['page_content']
-    # when element_format : "html", need to remove the annoying comment to prevent brython exec
-    page_content = page_content.replace('// <![CDATA[', '')
-    page_content = page_content.replace('// ]]>', '')
     page_order = request.form['page_order']
     if not isAdmin():
         return redirect("/login")
