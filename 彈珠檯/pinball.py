@@ -67,7 +67,7 @@ def button():
                 vrep.simxSetJointTargetVelocity(clientID,Rrev_handle,L_whirl,vrep.simx_opmode_oneshot_wait)
             else:
                 vrep.simxSetJointTargetVelocity(clientID,Rrev_handle,R_whirl,vrep.simx_opmode_oneshot_wait)
-            # 右擊球桿控制鍵(a)
+            # 左擊球桿控制鍵(l)
 
         except:
             break
