@@ -63,7 +63,7 @@ def button():
                 vrep.simxSetJointTargetVelocity(clientID,Lrev_handle,L_whirl,vrep.simx_opmode_oneshot_wait)
             # 右擊球桿控制鍵(a)
 
-            if keyboard.is_pressed('d'):
+            if keyboard.is_pressed('l'):
                 vrep.simxSetJointTargetVelocity(clientID,Rrev_handle,L_whirl,vrep.simx_opmode_oneshot_wait)
             else:
                 vrep.simxSetJointTargetVelocity(clientID,Rrev_handle,R_whirl,vrep.simx_opmode_oneshot_wait)
